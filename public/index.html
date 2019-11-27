@@ -1,0 +1,90 @@
+<html>
+  <head>
+    <title>Verificador de Palíndromo</title>
+  </head>
+  <body>
+    <div>
+        <div>
+            <h1>Verificador de Palíndromo</h1>
+            <button type="button" data-test="limpar-dados" onclick="apagaHistorico()" >limpar o histórico</button>
+        </div>
+        <input type="text" data-test="entrada">
+        <div>
+            <div id="grid">
+                <div class="grid-header">
+                    <div class="grid-header-row">
+                        <div class="col">Frase</div>
+                        <div class="col">Palímdromo</div>
+                    </div>
+                  </div>
+                <div class="grid-itens">                  
+                </div>                
+              </div>          
+        </div>
+    </div>  
+    <script>
+      const input = document.querySelector("input[type=text]")
+      const rows = document.getElementById('grid');
+      const palavras = [];
+      
+      function apagaHistorico() {
+        while(palavras.length) {
+          palavras.pop();
+        }
+        update();
+      }
+
+      function textoInverso(value) {
+        let inverso = '';
+        let arr = [...value];
+        for (let pos = arr.length-1; pos>=0; pos--) {
+          //console.log(arr[pos]);
+          inverso+=arr[pos];
+        }
+        //console.log(inverso);
+        return inverso;
+      }
+
+      function hePalimdromo(value) {
+        //console.log(value);
+        if (textoInverso(value)===value) {
+          return 'positivo';
+        }
+        return 'negativo';
+      }
+
+      const add = (value) => {
+        if(!value || value.trim().length <= 0){
+          return;
+        }    
+        palavra = {
+          palimdromo: value,
+          verificado: hePalimdromo(value)
+        };
+        //palavra.palimdromo = value;
+        //palavra."verificado" = hePalimdromo(value);
+        //console.log(palavra.verificado);
+        palavras.push(palavra);
+        input.value = "";
+        update();
+      }
+
+      const update = () => {
+       rows.innerHTML = palavras.map((el, index )=> `<div class='row'> 
+          <div data-verificado='${el.verificado}' class='col'>${el.palimdromo}</div> 
+          <div class='col'>${el.verificado === 'positivo' ? 'sim' : 'não'}</div> 
+        </div>`).join('');
+      }
+
+      input.addEventListener("keyup", (event) =>{
+        event.preventDefault()
+        if(event.key === 'Enter'){
+          add(input.value);
+        }
+      });
+
+      update();
+    </script>
+  </body>
+
+</html>
